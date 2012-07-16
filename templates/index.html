@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p>This site reads missed connections.</p>
+<h2>Summary stats</h2>
+<ol>
+	<li><a href="/summarize/age">age</a></li>
+	<li><a href="/summarize/location">location</a></li>
+	<li><a href="/summarize/me_gender">me_gender</a></li>
+	<li><a href="/summarize/you_gender">you_gender</a></li>
+</ol>
+<section>
+	{% for mis in misses %}
+	<div>
+		<h2><a href="{{ mis.url}}"> {{ mis.title }}</a></h2>
+		<p>{{ mis.body }}</p>
+	</div>
+	{% endfor %}
+</section>
+<p>with love from San Francisco</p>
+</body>
+</html>

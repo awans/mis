@@ -1,0 +1,7 @@
+cron:
+- description: hourly /mis fetch
+  url: /getnew
+  schedule: every 1 hours
+- description: hourly parse
+  url: /parsenew
+  schedule: every 1 hours

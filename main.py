@@ -1,31 +1,15 @@
 import webapp2
-import google.appengine.ext.db as db
 from bs4 import BeautifulSoup
 import urllib2
 import helper
 import operator
-import os
 from google.appengine.ext.webapp import template
-import pprint
+from model import MisHTML, Mis
+import missearch
+
+template.register_template_library('templates.mistags')
 
 PARSER_VERSION = 3
-
-class MisHTML(db.Model):
-  html = db.TextProperty()
-  posted = db.DateTimeProperty()
-  parsed_version = db.IntegerProperty(default=0)
-
-class Mis(db.Model):
-  html = db.TextProperty()
-  post_id = db.StringProperty()
-  url = db.StringProperty()
-  title = db.StringProperty()
-  body = db.TextProperty()
-  location = db.StringProperty()
-  age = db.IntegerProperty()
-  me_gender = db.StringProperty()
-  you_gender = db.StringProperty()
-  posted = db.DateTimeProperty()
 
 class GetNewHandler(webapp2.RequestHandler):
   def get(self):
@@ -82,6 +66,16 @@ class MainHandler(webapp2.RequestHandler):
     misses = Mis.all().order('-posted').fetch(50)
     self.response.out.write(template.render('templates/index.html',{'misses':misses}))
 
+class IndexHandler(webapp2.RequestHandler):
+  def get(self):
+    missearch.indexEverything()
+    
+class SearchHandler(webapp2.RequestHandler):
+  def get(self, query_string):
+    post_ids = missearch.missearch(query_string)
+    misses = Mis.get_by_key_name(post_ids)
+    self.response.out.write(template.render('templates/search.html',{'misses':misses}))
+    
 
 class SummarizeHandler(webapp2.RequestHandler):
   def get(self, field):
@@ -100,5 +94,7 @@ class SummarizeHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([('/', MainHandler),
                               (r'/summarize/(.*)',SummarizeHandler),
                               ('/getnew', GetNewHandler),
+                              ('/indexeverything', IndexHandler),
+                              (r'/search/(.*)',SearchHandler), 
                               ('/parsenew', ParseNewHTMLHandler)],
                               debug=True)

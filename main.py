@@ -6,6 +6,7 @@ import operator
 from google.appengine.ext.webapp import template
 from model import MisHTML, Mis
 import missearch
+import google.appengine.ext.db as db
 
 template.register_template_library('templates.mistags')
 

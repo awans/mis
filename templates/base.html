@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <style>
+    h2 {font-weight:normal;}
+    #footer {font-size:8pt; border-top:1px solid #ccc;}
+  </style>
+</head>
 <body>
-<p>This site reads missed connections.</p>
+<p><a href="/">This site reads missed connections.</a></p>
 <h2>Summary stats</h2>
 <ol>
   <li><a href="/summarize/age">age</a></li>
@@ -9,10 +15,16 @@
   <li><a href="/summarize/me_gender">me_gender</a></li>
   <li><a href="/summarize/you_gender">you_gender</a></li>
 </ol>
+<form action="/search" method=GET>
+<div>
+  <input type=search name=q placeholder="search" value="{{ query_string }}"></input><input type=submit>
+  <p><em>try [you_gender: m me_gender: m age > 24 "our eyes met" location: soma]</em></p>
+</div>
+</form>
 
 {% block content %}{% endblock %}
-
-<p>with love and <a href="https://github.com/awans/mis">code</a> from San Francisco</p>
+<section id="footer">
+<p>- with love and <a href="https://github.com/awans/mis">code</a> from San Francisco</p>
 <pre>
 To a Passer-By
 
@@ -36,5 +48,6 @@ O you whom I would have loved, O you who knew it!
 
 — William Aggeler, The Flowers of Evil (Fresno, CA: Academy Library Guild, 1954)
 </pre>
+</section>
 </body>
 </html>

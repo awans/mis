@@ -72,10 +72,13 @@ class IndexHandler(webapp2.RequestHandler):
     missearch.indexEverything()
     
 class SearchHandler(webapp2.RequestHandler):
-  def get(self, query_string):
-    post_ids = missearch.missearch(query_string)
-    misses = Mis.get_by_key_name(post_ids)
-    self.response.out.write(template.render('templates/search.html',{'misses':misses}))
+  def get(self):
+    query_string = self.request.get('q')
+    misses = None
+    if query_string:
+      post_ids = missearch.missearch(query_string)
+      misses = Mis.get_by_key_name(post_ids)
+    self.response.out.write(template.render('templates/search.html',{'misses':misses, 'query_string':query_string }))
     
 
 class SummarizeHandler(webapp2.RequestHandler):
@@ -96,6 +99,6 @@ app = webapp2.WSGIApplication([('/', MainHandler),
                               (r'/summarize/(.*)',SummarizeHandler),
                               ('/getnew', GetNewHandler),
                               ('/indexeverything', IndexHandler),
-                              (r'/search/(.*)',SearchHandler), 
+                              ('/search',SearchHandler), 
                               ('/parsenew', ParseNewHTMLHandler)],
                               debug=True)
